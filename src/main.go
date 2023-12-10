@@ -16,6 +16,25 @@ var t int64;
 func recCenter(r rl.Rectangle) rl.Vector2{
    return rl.NewVector2(r.X+r.Width, r.Y+r.Height);
 }
+//-----------------------------------------------------
+type ball struct{
+   pos rl.Vector2;
+   vel rl.Vector2;
+   rec rl.Rectangle;
+   col rl.Color;
+}
+func newBall(p rl.Vector2) ball{
+   var b = ball{pos: p,vel: rl.NewVector2(1,1),rec: rl.NewRectangle(16,16,32,32), col: rl.Red };
+   return b;
+
+}
+func moveBall(b ball,dt float32){
+   b.pos.X+=b.vel.X*dt;
+   b.pos.Y+=b.vel.Y*dt; 
+}
+func drawball(b ball){
+   rl.DrawTextureRec(plSprite, rl.NewRectangle(64*float32(t/3),0,64,64),b.pos, b.col);
+}
 //-Stuff-----------------------------------------------
 func event(){
    in["up"]=rl.IsKeyDown(rl.KeyW);
