@@ -34,7 +34,10 @@ func render(){
    rl.BeginDrawing();
    rl.BeginMode2D(cam)
    rl.ClearBackground(bgcol);
+   
+   rl.DrawTexture(plSprite, int32(0), int32(0), rl.White);
    rl.DrawTexture(plSprite, int32(plRect.X), int32(plRect.Y), rl.White);
+   
    rl.EndMode2D();
    rl.EndDrawing();
 }
