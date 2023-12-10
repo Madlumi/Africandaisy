@@ -7,7 +7,8 @@ var running bool=true;
 const w,h=640,480;
 var bgcol = rl.NewColor(111,02,244,255);
 var plSprite rl.Texture2D;
-var px,py int32=50,50;
+var plRect=rl.NewRectangle(50,50,32,32,);
+var pspeed=5.5;
 var in = make(map[string]bool);
 //-Stuff-----------------------------------------------
 func event(){
@@ -17,15 +18,15 @@ func event(){
    in["right"]=rl.IsKeyDown(rl.KeyD);
 }
 func tick(){
-   if(in["up"]){py--;}
-   if(in["down"]){py++;}
-   if(in["left"]){px--;}
-   if(in["right"]){px++;}
+   if(in["up"]){plRect.Y-=float32(pspeed);}
+   if(in["down"]){plRect.Y+=float32(pspeed);}
+   if(in["left"]){plRect.X-=float32(pspeed);}
+   if(in["right"]){plRect.X+=float32(pspeed);}
 }
 func render(){
    rl.BeginDrawing();
    rl.ClearBackground(bgcol);
-   rl.DrawTexture(plSprite, px, py, rl.White);
+   rl.DrawTexture(plSprite, int32(plRect.X), int32(plRect.Y), rl.White);
    rl.EndDrawing();
 }
 //-Oneers----------------------------------------------
