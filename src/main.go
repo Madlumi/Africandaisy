@@ -7,12 +7,12 @@ var running bool=true;
 const w,h=640,480;
 var bgcol = rl.NewColor(111,02,244,255);
 var plSprite rl.Texture2D;
-var plRect=rl.NewRectangle(50,50,32,32,);
+var plRect=rl.NewRectangle(50,50,32,32);
 var pspeed=5.5;
 var music rl.Music=rl.LoadMusicStream("res/mus.mp3");
 var in = make(map[string]bool);
 var cam rl.Camera2D;
-
+var t int64;
 func recCenter(r rl.Rectangle) rl.Vector2{
    return rl.NewVector2(r.X+r.Width, r.Y+r.Height);
 }
@@ -23,11 +23,12 @@ func event(){
    in["left"]=rl.IsKeyDown(rl.KeyA);
    in["right"]=rl.IsKeyDown(rl.KeyD);
 }
-func tick(){
-   if(in["up"]){plRect.Y-=float32(pspeed);}
-   if(in["down"]){plRect.Y+=float32(pspeed);}
-   if(in["left"]){plRect.X-=float32(pspeed);}
-   if(in["right"]){plRect.X+=float32(pspeed);}
+func tick(dt float64){
+   dt*=60;
+   if(in["up"]){plRect.Y-=float32(pspeed*dt);}
+   if(in["down"]){plRect.Y+=float32(pspeed*dt);}
+   if(in["left"]){plRect.X-=float32(pspeed*dt);}
+   if(in["right"]){plRect.X+=float32(pspeed*dt);}
 }
 func render(){
    cam.Target=recCenter(plRect);
@@ -36,7 +37,8 @@ func render(){
    rl.ClearBackground(bgcol);
    
    rl.DrawTexture(plSprite, int32(0), int32(0), rl.White);
-   rl.DrawTexture(plSprite, int32(plRect.X), int32(plRect.Y), rl.White);
+   //rl.DrawTexture(plSprite, int32(plRect.X), int32(plRect.Y), rl.White);
+   rl.DrawTextureRec(plSprite, rl.NewRectangle(64*float32(t/3),0,64,64),rl.NewVector2((plRect.X), (plRect.Y)), rl.White);
    
    rl.EndMode2D();
    rl.EndDrawing();
@@ -44,8 +46,9 @@ func render(){
 //-Oneers----------------------------------------------
 func gameLoop(){
    event();
-   tick();
+   tick(1.0/60);
    render();
+   t++;
    if(rl.WindowShouldClose()){running=false;}
    if(running){gameLoop();}
 }
@@ -55,7 +58,7 @@ func initalize(){
    rl.SetTargetFPS(60);
    plSprite=rl.LoadTexture("res/cube.png")
    rl.InitAudioDevice()
-   cam = rl.NewCamera2D(rl.NewVector2(w/2,h/2),rl.NewVector2(0,0),0,1);
+   cam = rl.NewCamera2D(rl.NewVector2(w/2,h/2),rl.NewVector2(0,0),0,3);
    rl.PlayMusicStream(music);
 }
 func done(){
